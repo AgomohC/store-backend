@@ -1,0 +1,39 @@
+{
+   "name": "store-backend",
+   "version": "1.0.0",
+   "description": "An API that serves an ecommerce store",
+   "main": "index.js",
+   "scripts": {
+      "start": "node index.js",
+      "dev": "nodemon index.js"
+   },
+   "keywords": [
+      "CRUD",
+      "e-commerce",
+      "mongoose",
+      "express",
+      "cors",
+      "dotenv",
+      "helmet"
+   ],
+   "author": "Chinaemerem Agomoh",
+   "homepage": "",
+   "license": "ISC",
+   "devDependencies": {
+      "nodemon": "^2.0.13"
+   },
+   "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^10.0.0",
+      "express": "^4.17.1",
+      "express-async-errors": "^3.1.1",
+      "helmet": "^4.6.0",
+      "http-status-codes": "^2.1.4",
+      "mongoose": "^6.0.10",
+      "jsonwebtoken": "^8.5.1",
+      "bcryptjs": "^2.4.3"
+   },
+   "engines": {
+      "node": "14.x"
+   }
+}
