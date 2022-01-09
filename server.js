@@ -14,10 +14,8 @@ const productRoutes = require("./routes/products");
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-if (process.env.NODE_ENV === "production") {
-   app.use(express.static("client/build"));
-}
-// app.use(cors());
+
+app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
 
 const connect = require("./db/connect");

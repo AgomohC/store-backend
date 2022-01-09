@@ -40,7 +40,9 @@ const getSearchItem = async (req, res) => {
    const {
       params: { searchValue },
    } = req;
-   const product = await Products.find({ title: /searchValue/gi });
+   const product = await Products.find({
+      title: new Regexp(searchValue, "gi"),
+   });
    if (!product) {
       throw new NotFoundError("Item not found");
    }
