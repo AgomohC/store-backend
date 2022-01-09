@@ -4,6 +4,7 @@ const {
    getAllCategories,
    getSingleProduct,
    getProductInCategory,
+   getSearchItem,
 } = require("./product-controller");
 const {
    getAllProductInAUserCart,
@@ -28,4 +29,5 @@ module.exports = {
    incrementCartItem,
    decrementCartItem,
    checkout,
+   getSearchItem,
 };

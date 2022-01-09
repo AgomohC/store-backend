@@ -1,8 +1,6 @@
 const Products = require("../models/Products");
 const { StatusCodes } = require("http-status-codes");
-
-const { BadRequestError, UnauthenticatedError } = require("../errors");
-
+const { NotFoundError } = require("../errors");
 const getAllProducts = async (req, res) => {
    const products = await Products.find({});
    return res.status(StatusCodes.OK).json(products);
@@ -24,6 +22,9 @@ const getSingleProduct = async (req, res) => {
       params: { _id },
    } = req;
    const product = await Products.findOne({ _id });
+   if (!product) {
+      throw new NotFoundError("Item not found");
+   }
    return res.status(StatusCodes.OK).json(product);
 };
 
@@ -35,9 +36,21 @@ const getProductInCategory = async (req, res) => {
    return res.status(StatusCodes.OK).json(product);
 };
 
+const getSearchItem = async (req, res) => {
+   const {
+      params: { searchValue },
+   } = req;
+   const product = await Products.find({ title: /searchValue/gi });
+   if (!product) {
+      throw new NotFoundError("Item not found");
+   }
+   return res.status(StatusCodes.OK).json(product);
+};
+
 module.exports = {
    getAllProducts,
    getAllCategories,
    getSingleProduct,
    getProductInCategory,
+   getSearchItem,
 };

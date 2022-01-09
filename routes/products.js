@@ -22,4 +22,7 @@ router.route("/:_id").get(getSingleProduct);
 //  get products in categories
 router.route("/categories/:category").get(getProductInCategory);
 
+// get item searched for
+router.route("/:searchValue").get(getSingleProduct);
+
 module.exports = router;
