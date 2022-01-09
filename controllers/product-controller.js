@@ -20,11 +20,19 @@ const getAllCategories = async (req, res) => {
 };
 
 const getSingleProduct = async (req, res) => {
-   res.status(StatusCodes.OK).json({ singleProduct: "Single Product" });
+   const {
+      params: { _id },
+   } = req;
+   const product = await Products.findOne({ _id });
+   return res.status(StatusCodes.OK).json(product);
 };
 
 const getProductInCategory = async (req, res) => {
-   res.status(StatusCodes.OK).json({ categories: "categories product" });
+   const {
+      params: { category },
+   } = req;
+   const product = await Products.find({ category });
+   return res.status(StatusCodes.OK).json(product);
 };
 
 module.exports = {
