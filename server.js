@@ -7,14 +7,22 @@ const cors = require("cors");
 const helmet = require("helmet");
 const notFound = require("./middleware/not-found");
 const errorHandler = require("./middleware/error-handler");
-// const libraryRoutes = require("./routes/library-routes");
+const authRoutes = require("./routes/auth");
+const cartRoutes = require("./routes/cart");
+const productRoutes = require("./routes/products");
 
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+// app.use(cors());
 app.use(helmet());
+
 const connect = require("./db/connect");
+
+app.use("/api/auth", authRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/products", productRoutes);
+
 //error handler and not found handler
 app.use(notFound);
 app.use(errorHandler);

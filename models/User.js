@@ -50,7 +50,7 @@ UserSchema.methods.createJWT = function () {
 };
 
 // compare password with hash in db
-ThreadSchema.methods.comparePasswords = async function (candidatePassword) {
+UserSchema.methods.comparePasswords = async function (candidatePassword) {
    const isMatch = await bcrypt.compare(
       candidatePassword,
       this.delete_password

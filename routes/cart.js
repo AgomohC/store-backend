@@ -13,24 +13,24 @@ const {
 // define routes
 
 //  get all products in a user's cart
-router.route("/cart/:id").get(getAllProductInAUserCart);
+router.route("/:id").get(getAllProductInAUserCart);
 
 //  add to cart
-router.route("/cart/:id").post(addProductToAUserCart);
+router.route("/:id").post(addProductToAUserCart);
 
 //  remove from cart
-router.route("/cart/:id").delete(deleteProductFromAUserCart);
+router.route("/:id").delete(deleteProductFromAUserCart);
 
 // clear cart
-router.route("/cart/:id").delete(deleteAllProductsFromAUserCart);
+router.route("/:id").delete(deleteAllProductsFromAUserCart);
 
 // increment cart item
-router.route("/cart/:id").patch(incrementCartItem);
+router.route("/:id").patch(incrementCartItem);
 
 // decrement cart item
-router.route("/cart/:id").patch(decrementCartItem);
+router.route("/:id").patch(decrementCartItem);
 
 // checkout
-router.route("/cart/:id").post(checkout);
+router.route("/:id").post(checkout);
 
 module.exports = router;

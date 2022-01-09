@@ -4,11 +4,19 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const getAllProducts = async (req, res) => {
-   res.status(StatusCodes.OK).json({ products: "products" });
+   const products = await Products.find({});
+   return res.status(StatusCodes.OK).json(products);
 };
 
 const getAllCategories = async (req, res) => {
-   res.status(StatusCodes.OK).json({ categories: "categories" });
+   let categories = ["All"];
+   const products = await Products.find({});
+   products.map((product) => {
+      const { category } = product;
+      categories.push(category);
+   });
+   categories = [...new Set(categories)];
+   return res.status(StatusCodes.OK).json(categories);
 };
 
 const getSingleProduct = async (req, res) => {
@@ -16,7 +24,7 @@ const getSingleProduct = async (req, res) => {
 };
 
 const getProductInCategory = async (req, res) => {
-   res.status(StatusCodes.OK).json({ categories: "categories" });
+   res.status(StatusCodes.OK).json({ categories: "categories product" });
 };
 
 module.exports = {
