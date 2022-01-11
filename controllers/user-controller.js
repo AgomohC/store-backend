@@ -13,7 +13,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
    const { username, password } = req.body;
-
    if (!username || !password) {
       throw new BadRequestError("Please provide username and password");
    }
