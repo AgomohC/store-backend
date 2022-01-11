@@ -3,9 +3,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const UserSchema = mongoose.Schema({
-   name: {
+   firstName: {
       type: String,
-      required: [true, "please enter name"],
+      required: [true, "please enter first name"],
+   },
+   lastName: {
+      type: String,
+      required: [true, "please enter last name"],
    },
    email: {
       type: String,
@@ -35,26 +39,20 @@ const UserSchema = mongoose.Schema({
 
 //hash password before saving to the dbs
 UserSchema.pre("save", async function () {
-   this.delete_password = await bcrypt.hash(this.delete_password, 12);
+   const salt = await bcrypt.genSalt(12);
+   this.password = await bcrypt.hash(this.password, salt);
 });
 
 // create token
 UserSchema.methods.createJWT = function () {
-   return jwt.sign(
-      { userId: this._id, name: this.name },
-      process.env.JWT_SECRET,
-      {
-         expiresIn: process.env.JWT_LIFETIME,
-      }
-   );
+   return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_LIFETIME,
+   });
 };
 
 // compare password with hash in db
 UserSchema.methods.comparePasswords = async function (candidatePassword) {
-   const isMatch = await bcrypt.compare(
-      candidatePassword,
-      this.delete_password
-   );
+   const isMatch = await bcrypt.compare(candidatePassword, this.password);
    return isMatch;
 };
 

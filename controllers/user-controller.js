@@ -3,9 +3,12 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const register = async (req, res) => {
-   const user = await User.create({ ...req.body });
-   const token = user.createJWT();
-   res.status(StatusCodes.CREATED).json({ user, token });
+   const newUser = await User.create({ ...req.body });
+   const token = newUser.createJWT();
+   const user = await User.findOne({ _id: newUser._id }).select(
+      " firstName lastName cartItems email username"
+   );
+   return res.status(StatusCodes.CREATED).json({ user, token });
 };
 
 const login = async (req, res) => {

@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const errorHandlerMiddleware = (err, req, res, next) => {
-   console.log(err);
+   // console.log(err);
    let customError = {
       statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
       msg: err.message || "Something went wrong, try again later",
@@ -12,7 +12,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
    }
    if (err.code === 11000) {
       customError.statusCode = 400;
-      customError.msg = `${err.keyValue.title} already exists`;
+      customError.msg = `${Object.keys(err.keyValue).join("")} already exists`;
    }
    return res.status(customError.statusCode).json({ error: customError.msg });
 };

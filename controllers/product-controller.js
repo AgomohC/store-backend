@@ -4,8 +4,6 @@ const { NotFoundError } = require("../errors");
 
 const getAllProducts = async (req, res) => {
    const products = await Products.find({});
-
-   console.log(req.url);
    return res.status(StatusCodes.OK).json(products);
 };
 
@@ -46,14 +44,13 @@ const getSearchItem = async (req, res) => {
    let {
       body: { searchValue },
    } = req;
+   if (searchValue.length < 1) {
+      return;
+   }
    searchValue = new RegExp(searchValue);
    const product = await Products.find({
       title: { $regex: searchValue, $options: "ig" },
    });
-   // const product = await Products.find({}).$where(function () {
-   //    return (this.category = searchValue);
-   // });
-   // console.log(product);
    if (!product) {
       throw new NotFoundError("Item not found");
    }
