@@ -10,7 +10,7 @@ const errorHandler = require("./middleware/error-handler");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
 const productRoutes = require("./routes/products");
-
+const auth = require("./middleware/authentication");
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -21,7 +21,7 @@ app.use(helmet());
 const connect = require("./db/connect");
 
 app.use("/api/auth", authRoutes);
-app.use("/api/cart", cartRoutes);
+app.use("/api/cart", auth, cartRoutes);
 app.use("/api/products", productRoutes);
 
 //error handler and not found handler
