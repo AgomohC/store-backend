@@ -22,6 +22,7 @@ module.exports = {
    getAllCategories,
    getSingleProduct,
    getProductInCategory,
+   getSearchItem,
    getAllProductInAUserCart,
    addProductToAUserCart,
    deleteProductFromAUserCart,
@@ -29,5 +30,4 @@ module.exports = {
    incrementCartItem,
    decrementCartItem,
    checkout,
-   getSearchItem,
 };

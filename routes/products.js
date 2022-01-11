@@ -6,6 +6,7 @@ const {
    getAllCategories,
    getSingleProduct,
    getProductInCategory,
+   getSearchItem,
 } = require("../controllers");
 
 // define routes
@@ -23,6 +24,6 @@ router.route("/:_id").get(getSingleProduct);
 router.route("/categories/:category").get(getProductInCategory);
 
 // get item searched for
-router.route("/:searchValue").get(getSingleProduct);
+router.route("/").post(getSearchItem);
 
 module.exports = router;

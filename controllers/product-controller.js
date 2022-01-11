@@ -1,14 +1,18 @@
 const Products = require("../models/Products");
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError } = require("../errors");
+
 const getAllProducts = async (req, res) => {
    const products = await Products.find({});
+
+   console.log(req.url);
    return res.status(StatusCodes.OK).json(products);
 };
 
 const getAllCategories = async (req, res) => {
    let categories = ["All"];
    const products = await Products.find({});
+
    products.map((product) => {
       const { category } = product;
       categories.push(category);
@@ -22,6 +26,7 @@ const getSingleProduct = async (req, res) => {
       params: { _id },
    } = req;
    const product = await Products.findOne({ _id });
+
    if (!product) {
       throw new NotFoundError("Item not found");
    }
@@ -33,16 +38,22 @@ const getProductInCategory = async (req, res) => {
       params: { category },
    } = req;
    const product = await Products.find({ category });
+
    return res.status(StatusCodes.OK).json(product);
 };
 
 const getSearchItem = async (req, res) => {
-   const {
-      params: { searchValue },
+   let {
+      body: { searchValue },
    } = req;
+   searchValue = new RegExp(searchValue);
    const product = await Products.find({
-      title: new Regexp(searchValue, "gi"),
+      title: { $regex: searchValue, $options: "ig" },
    });
+   // const product = await Products.find({}).$where(function () {
+   //    return (this.category = searchValue);
+   // });
+   // console.log(product);
    if (!product) {
       throw new NotFoundError("Item not found");
    }
