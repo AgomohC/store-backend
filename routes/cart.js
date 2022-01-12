@@ -25,12 +25,12 @@ router.route("/delete").delete(deleteProductFromAUserCart);
 router.route("/delete_all").delete(deleteAllProductsFromAUserCart);
 
 // increment cart item
-router.route("/increment:_id").patch(incrementCartItem);
+router.route("/increment").patch(incrementCartItem);
 
 // decrement cart item
-router.route("/decrement/:_id").patch(decrementCartItem);
+router.route("/decrement").patch(decrementCartItem);
 
 // checkout
-router.route("/checkout/:_id").post(checkout);
+router.route("/checkout").post(checkout);
 
 module.exports = router;

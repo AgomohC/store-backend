@@ -61,9 +61,7 @@ const deleteProductFromAUserCart = async (req, res) => {
       user: { user_id },
       body: { product_id },
    } = req;
-   if (!user_id) {
-      throw new UnauthenticatedError("Please login or register");
-   }
+
    if (!product_id) {
       throw new BadRequestError("Please enter product");
    }
@@ -99,7 +97,25 @@ const deleteAllProductsFromAUserCart = async (req, res) => {
    return res.status(StatusCodes.OK).json(emptyCart);
 };
 const incrementCartItem = async (req, res) => {
-   res.status(StatusCodes.OK).json({ cart: "decremented cart item" });
+   const {
+      body: { product_id },
+      user: { user_id },
+   } = req;
+
+   if (!product_id) {
+      throw new BadRequestError("Please enter product");
+   }
+   const filterCart = await Cart.findOne({ user_id });
+
+   const userCart = await Cart.findOneAndUpdate(
+      { user_id },
+      { $push: { products_id: product_id }, count: filterCart.count + 1 },
+      { new: true, runValidators: true }
+   );
+   if (!userCart) {
+      throw new NotFoundError("Cart does not exist");
+   }
+   return res.status(StatusCodes.OK).json(userCart);
 };
 const decrementCartItem = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "decremented cart item" });
