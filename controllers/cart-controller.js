@@ -1,23 +1,35 @@
 const Cart = require("../models/Cart");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequestError, UnauthenticatedError } = require("../errors");
-const User = require("../models/User");
+const {
+   BadRequestError,
+   UnauthenticatedError,
+   NotFoundError,
+} = require("../errors");
 
 const getAllProductInAUserCart = async (req, res) => {
    const {
-      params: { _id },
+      params: { user_id },
    } = req;
-   const user = User.findById({ _id }).populate({
-      path: "cartItems",
+   if (!user_id) {
+      throw new BadRequestError(`Please enter id`);
+   }
+   const cart = await Cart.findOne({ user_id }).populate({
+      path: "products_id",
+      select: "_id title price description image category",
    });
-
-   return res.status(StatusCodes.OK).json({ cart: "cart products" });
+   if (!cart) {
+      throw new NotFoundError(`Cart not found`);
+   }
+   return res.status(StatusCodes.OK).json(cart);
 };
 const addProductToAUserCart = async (req, res) => {
    const {
       params: { user_id },
       body: { product_id },
    } = req;
+   if (!user_id || !product_id) {
+      throw new BadRequestError(`please enter id`);
+   }
    const userCart = await Cart.findOne({ user_id });
    if (!userCart) {
       const newCart = await Cart.create({
