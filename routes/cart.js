@@ -19,10 +19,10 @@ router.route("/:user_id").get(getAllProductInAUserCart);
 router.route("/:user_id").post(addProductToAUserCart);
 
 //  remove from cart
-router.route("/delete/:_id").delete(deleteProductFromAUserCart);
+router.route("/delete/:user_id").delete(deleteProductFromAUserCart);
 
 // clear cart
-router.route("/delete_all/:_id").delete(deleteAllProductsFromAUserCart);
+router.route("/delete_all/:user_id").delete(deleteAllProductsFromAUserCart);
 
 // increment cart item
 router.route("/increment:_id").patch(incrementCartItem);

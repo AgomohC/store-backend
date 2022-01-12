@@ -1,10 +1,6 @@
 const Cart = require("../models/Cart");
 const { StatusCodes } = require("http-status-codes");
-const {
-   BadRequestError,
-   UnauthenticatedError,
-   NotFoundError,
-} = require("../errors");
+const { BadRequestError, NotFoundError } = require("../errors");
 
 const getAllProductInAUserCart = async (req, res) => {
    const {
@@ -60,7 +56,18 @@ const deleteProductFromAUserCart = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "deleted cart products" });
 };
 const deleteAllProductsFromAUserCart = async (req, res) => {
-   res.status(StatusCodes.OK).json({ cart: "deleted all cart products" });
+   const {
+      params: { user_id },
+   } = req;
+   const emptyCart = await Cart.findOneAndUpdate(
+      { user_id },
+      { products_id: [], count: 0 },
+      { new: true, runValidators: true }
+   );
+   if (!emptyCart) {
+      throw new NotFoundError(`Cart does not exist`);
+   }
+   return res.status(StatusCodes.OK).json(emptyCart);
 };
 const incrementCartItem = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "decremented cart item" });
