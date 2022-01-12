@@ -11,6 +11,9 @@ const CartSchema = mongoose.Schema({
          ref: "Product",
       },
    ],
+   count: {
+      type: Number,
+   },
 });
 const Cart = mongoose.model("Cart", CartSchema);
 module.exports = Cart;

@@ -25,12 +25,7 @@ const UserSchema = mongoose.Schema({
       required: [true, "please enter username"],
       unique: true,
    },
-   cartItems: [
-      {
-         type: mongoose.Types.ObjectId,
-         ref: "Cart",
-      },
-   ],
+
    password: {
       type: String,
       required: [true, "please enter password"],

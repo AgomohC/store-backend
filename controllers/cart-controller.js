@@ -15,12 +15,25 @@ const getAllProductInAUserCart = async (req, res) => {
 };
 const addProductToAUserCart = async (req, res) => {
    const {
-      params: { _id },
-      body,
+      params: { user_id },
+      body: { product_id },
    } = req;
-   const userCart = await Cart.findOneAndUpdate(
-      { user_id: _id },
-      { $push: { products_id: body } },
+   const userCart = await Cart.findOne({ user_id });
+   if (!userCart) {
+      const newCart = await Cart.create({
+         user_id,
+         products_id: [product_id],
+         count: 1,
+      });
+      const returnedCart = await Cart.findOne({ _id: newCart._id }).populate({
+         path: "products_id",
+         select: "_id title price description image category",
+      });
+      return res.status(StatusCodes.CREATED).json(returnedCart);
+   }
+   const userCart2 = await Cart.findOneAndUpdate(
+      { user_id },
+      { $push: { products_id: product_id }, count: userCart.count + 1 },
       {
          new: true,
          runValidators: true,
@@ -29,19 +42,7 @@ const addProductToAUserCart = async (req, res) => {
       path: "products_id",
       select: "_id title price description image category",
    });
-   if (!userCart) {
-      const newCart = await Cart.create({
-         user_id: _id,
-         products_id: [body],
-      });
-      const returnedCart = await Cart.findOne({ _id: newCart._id }).populate({
-         path: "products_id",
-         select: "_id title price description image category",
-      });
-      return res.status(StatusCodes.CREATED).json(returnedCart);
-   }
-
-   return res.status(StatusCodes.CREATED).json(userCart);
+   return res.status(StatusCodes.CREATED).json(userCart2);
 };
 const deleteProductFromAUserCart = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "deleted cart products" });
