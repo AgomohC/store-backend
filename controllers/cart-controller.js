@@ -1,10 +1,14 @@
 const Cart = require("../models/Cart");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequestError, NotFoundError } = require("../errors");
+const {
+   BadRequestError,
+   NotFoundError,
+   UnauthenticatedError,
+} = require("../errors");
 
 const getAllProductInAUserCart = async (req, res) => {
    const {
-      params: { user_id },
+      user: { user_id },
    } = req;
    if (!user_id) {
       throw new BadRequestError(`Please enter id`);
@@ -20,7 +24,7 @@ const getAllProductInAUserCart = async (req, res) => {
 };
 const addProductToAUserCart = async (req, res) => {
    const {
-      params: { user_id },
+      user: { user_id },
       body: { product_id },
    } = req;
    if (!user_id || !product_id) {
@@ -53,11 +57,36 @@ const addProductToAUserCart = async (req, res) => {
    return res.status(StatusCodes.CREATED).json(userCart2);
 };
 const deleteProductFromAUserCart = async (req, res) => {
-   res.status(StatusCodes.OK).json({ cart: "deleted cart products" });
+   const {
+      user: { user_id },
+      body: { product_id },
+   } = req;
+   if (!user_id) {
+      throw new UnauthenticatedError("Please login or register");
+   }
+   if (!product_id) {
+      throw new BadRequestError("Please enter product");
+   }
+   const filterItem = await Cart.findOne({ user_id });
+   if (!filterItem) {
+      throw new NotFoundError("No cart found");
+   }
+   const filterArray = filterItem.products_id.filter(
+      (id) => id.toString() !== product_id
+   );
+   const deletedItem = await Cart.findOneAndUpdate(
+      { user_id },
+      { products_id: filterArray, count: filterArray.length },
+      { new: true, runValidators: true }
+   );
+   if (!deletedItem) {
+      throw new NotFoundError("No cart found");
+   }
+   return res.status(StatusCodes.OK).json(deletedItem);
 };
 const deleteAllProductsFromAUserCart = async (req, res) => {
    const {
-      params: { user_id },
+      user: { user_id },
    } = req;
    const emptyCart = await Cart.findOneAndUpdate(
       { user_id },
