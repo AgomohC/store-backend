@@ -14,7 +14,34 @@ const getAllProductInAUserCart = async (req, res) => {
    return res.status(StatusCodes.OK).json({ cart: "cart products" });
 };
 const addProductToAUserCart = async (req, res) => {
-   res.status(StatusCodes.OK).json({ cart: "added cart products" });
+   const {
+      params: { _id },
+      body,
+   } = req;
+   const userCart = await Cart.findOneAndUpdate(
+      { user_id: _id },
+      { $push: { products_id: body } },
+      {
+         new: true,
+         runValidators: true,
+      }
+   ).populate({
+      path: "products_id",
+      select: "_id title price description image category",
+   });
+   if (!userCart) {
+      const newCart = await Cart.create({
+         user_id: _id,
+         products_id: [body],
+      });
+      const returnedCart = await Cart.findOne({ _id: newCart._id }).populate({
+         path: "products_id",
+         select: "_id title price description image category",
+      });
+      return res.status(StatusCodes.CREATED).json(returnedCart);
+   }
+
+   return res.status(StatusCodes.CREATED).json(userCart);
 };
 const deleteProductFromAUserCart = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "deleted cart products" });
