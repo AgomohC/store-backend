@@ -5,10 +5,16 @@ const CartSchema = mongoose.Schema({
       ref: "User",
       required: [true, "no user id provided"],
    },
-   products_id: [
+   products: [
       {
-         type: mongoose.Types.ObjectId,
-         ref: "Product",
+         product_id: {
+            type: mongoose.Types.ObjectId,
+            ref: "Product",
+         },
+         quantity: {
+            type: Number,
+            default: 1,
+         },
       },
    ],
    count: {
