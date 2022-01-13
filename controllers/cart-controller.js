@@ -11,9 +11,6 @@ const getAllProductInAUserCart = async (req, res) => {
    const {
       user: { user_id },
    } = req;
-   if (!user_id) {
-      throw new BadRequestError(`Please enter id`);
-   }
    const cart = await Cart.findOne({ user_id }).populate({
       path: "products.product_id",
       select: "_id title price description image category",
@@ -112,19 +109,28 @@ const deleteProductFromAUserCart = async (req, res) => {
       body: { product_id },
    } = req;
 
+   // check if product_id was passed in
    if (!product_id) {
       throw new BadRequestError("Please enter product");
    }
+
+   //  find the user's cart
    const filterItem = await Cart.findOne({ user_id });
+
+   // throw error if user doesn't have a cart
    if (!filterItem) {
       throw new NotFoundError("No cart found");
    }
-   const filterArray = filterItem.products_id.filter(
-      (id) => id.toString() !== product_id
+   const deletedItem1 = filterItem.products.find(
+      (product) => product.product_id.toString() === product_id
    );
+   const filterArray = filterItem.products.filter(
+      (product) => product.product_id.toString() !== product_id
+   );
+   const newCount = filterItem.count - deletedItem1.quantity;
    const deletedItem = await Cart.findOneAndUpdate(
       { user_id },
-      { products_id: filterArray, count: filterArray.length },
+      { products: [...filterArray], count: newCount },
       { new: true, runValidators: true }
    );
    if (!deletedItem) {
