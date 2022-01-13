@@ -118,7 +118,45 @@ const incrementCartItem = async (req, res) => {
    return res.status(StatusCodes.OK).json(userCart);
 };
 const decrementCartItem = async (req, res) => {
-   res.status(StatusCodes.OK).json({ cart: "decremented cart item" });
+   const {
+      body: { product_id },
+      user: { user_id },
+   } = req;
+
+   // check if the product_id is missing
+   if (!product_id) {
+      throw new BadRequestError("Please enter product");
+   }
+
+   // check if the user has a cart
+   const filterCart = await Cart.findOne({ user_id });
+   if (!filterCart) {
+      throw new UnauthenticatedError("Please login");
+   }
+
+   //find the index product to be decremented in the user's cart
+   const indexItemInCart = filterCart.products_id
+      .map((id) => id.toString())
+      .findIndex((id) => id === product_id);
+
+   // check if the product does not exists
+   if (indexItemInCart === -1) {
+      throw new NotFoundError("Item not in cart");
+   }
+
+   //
+   await filterCart.products_id.splice(indexItemInCart, 1);
+
+   const newCount = filterCart.count - 1;
+   const userCart = await Cart.findOneAndUpdate(
+      { user_id },
+      { products_id: [...filterCart.products_id], count: newCount },
+      { new: true, runValidators: true }
+   );
+   if (!userCart) {
+      throw new NotFoundError("Cart does not exist");
+   }
+   return res.status(StatusCodes.OK).json(userCart);
 };
 const checkout = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "checkout" });
