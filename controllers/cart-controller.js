@@ -144,7 +144,7 @@ const deleteAllProductsFromAUserCart = async (req, res) => {
    } = req;
    const emptyCart = await Cart.findOneAndUpdate(
       { user_id },
-      { products_id: [], count: 0 },
+      { products: [], count: 0 },
       { new: true, runValidators: true }
    );
    if (!emptyCart) {
