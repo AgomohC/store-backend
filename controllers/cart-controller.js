@@ -6,7 +6,6 @@ const {
    UnauthenticatedError,
 } = require("../errors");
 const mongoose = require("mongoose");
-const { is } = require("express/lib/request");
 
 const getAllProductInAUserCart = async (req, res) => {
    const {
@@ -16,7 +15,7 @@ const getAllProductInAUserCart = async (req, res) => {
       throw new BadRequestError(`Please enter id`);
    }
    const cart = await Cart.findOne({ user_id }).populate({
-      path: "products.products_id",
+      path: "products.product_id",
       select: "_id title price description image category",
    });
    if (!cart) {
