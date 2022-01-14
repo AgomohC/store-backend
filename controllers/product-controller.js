@@ -42,10 +42,14 @@ const getProductInCategory = async (req, res) => {
 
 const getSearchItem = async (req, res) => {
    let {
-      body: { searchValue },
+      params: { searchValue },
    } = req;
    if (searchValue.length < 1) {
-      return;
+      const product = await Products.find({});
+      if (!product) {
+         throw new NotFoundError("Item not found");
+      }
+      return res.status(StatusCodes.OK).json(product);
    }
    searchValue = new RegExp(searchValue);
    const product = await Products.find({

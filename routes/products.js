@@ -24,6 +24,6 @@ router.route("/:_id").get(getSingleProduct);
 router.route("/categories/:category").get(getProductInCategory);
 
 // get item searched for
-router.route("/").post(getSearchItem);
+router.route("/:searchValue").get(getSearchItem);
 
 module.exports = router;

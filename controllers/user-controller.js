@@ -6,7 +6,7 @@ const register = async (req, res) => {
    const newUser = await User.create({ ...req.body });
    const token = newUser.createJWT();
    const user = await User.findOne({ _id: newUser._id }).select(
-      "firstName lastName cartItems email username"
+      "firstName lastName email username"
    );
    return res.status(StatusCodes.CREATED).json({ user, token });
 };
@@ -18,16 +18,16 @@ const login = async (req, res) => {
    }
    const user = await User.findOne({ username });
    if (!user) {
-      throw new UnauthenticatedError("Invalid Credentials");
+      throw new UnauthenticatedError("Please register");
    }
    // compare password
    const isPasswordCorrect = await user.comparePasswords(password);
    if (!isPasswordCorrect) {
-      throw new UnauthenticatedError("Invalid Credentials");
+      throw new UnauthenticatedError("Password Is incorrect");
    }
    const token = user.createJWT();
    const newUser = await User.findOne({ username }).select(
-      "_id firstName lastName username email cartItems"
+      "_id firstName lastName username email"
    );
 
    return res.status(StatusCodes.OK).json({ user: newUser, token });
