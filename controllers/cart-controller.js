@@ -124,6 +124,9 @@ const deleteProductFromAUserCart = async (req, res) => {
    const deletedItem1 = filterItem.products.find(
       (product) => product.product_id.toString() === product_id
    );
+   if (!deletedItem1) {
+      throw new NotFoundError("Item not in cart");
+   }
    const filterArray = filterItem.products.filter(
       (product) => product.product_id.toString() !== product_id
    );
@@ -158,14 +161,32 @@ const incrementCartItem = async (req, res) => {
       user: { user_id },
    } = req;
 
+   // check if product id exists in the request body
    if (!product_id) {
       throw new BadRequestError("Please enter product");
    }
-   const filterCart = await Cart.findOne({ user_id });
 
+   //  find cart
+   const filterCart = await Cart.findOne({ user_id });
+   if (!filterCart) {
+      throw NotFoundError("No cart found");
+   }
+   const updatedItem = filterCart.products.find(
+      (product) => product.product_id.toString() === product_id
+   );
+   if (!updatedItem) {
+      throw new NotFoundError("Item not in cart");
+   }
+   const filterArray = filterCart.products.filter(
+      (product) => product.product_id.toString() !== product_id
+   );
+   const update = {
+      product_id: mongoose.Types.ObjectId(product_id),
+      quantity: updatedItem.quantity + 1,
+   };
    const userCart = await Cart.findOneAndUpdate(
       { user_id },
-      { $push: { products_id: product_id }, count: filterCart.count + 1 },
+      { products: [...filterArray, update], count: filterCart.count + 1 },
       { new: true, runValidators: true }
    );
    if (!userCart) {
