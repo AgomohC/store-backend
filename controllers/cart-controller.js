@@ -207,33 +207,81 @@ const decrementCartItem = async (req, res) => {
 
    // check if the user has a cart
    const filterCart = await Cart.findOne({ user_id });
+
+   // throw  error if user has no cart
    if (!filterCart) {
-      throw new UnauthenticatedError("Please login");
+      throw new NotFoundError("No cart found");
    }
 
-   //find the index product to be decremented in the user's cart
-   const indexItemInCart = filterCart.products_id
-      .map((id) => id.toString())
-      .findIndex((id) => id === product_id);
+   //  find the item to be decremented
+   const updatedItem = filterCart.products.find(
+      (product) => product.product_id.toString() === product_id
+   );
 
-   // check if the product does not exists
-   if (indexItemInCart === -1) {
+   // throw error is the item is not in the cart
+   if (!updatedItem) {
       throw new NotFoundError("Item not in cart");
    }
 
-   //
-   await filterCart.products_id.splice(indexItemInCart, 1);
+   // remove the item to be decremented from the cart
+   const filterArray = filterCart.products.filter(
+      (product) => product.product_id.toString() !== product_id
+   );
 
-   const newCount = filterCart.count - 1;
+   // if the item to be decremented has a quantity of one, return the cart like that while decrementing the cart
+   if (updatedItem.quantity === 1) {
+      // find the cart and update it without the item with a quantity of 0
+      const userCart = await Cart.findOneAndUpdate(
+         { user_id },
+         { products: [...filterArray], count: filterCart.count - 1 },
+         { new: true, runValidators: true }
+      );
+
+      //  check if inserting into the database was successful
+      if (!userCart) {
+         throw new NotFoundError("Cart does not exist");
+      }
+
+      // json return
+      return res.status(StatusCodes.OK).json(userCart);
+   }
+   let update = {
+      product_id: mongoose.Types.ObjectId(product_id),
+      quantity: updatedItem.quantity - 1,
+   };
+   // TODO: FIX BUG AND POPULATE THE RESPONSES FOR ALL ROUTES
    const userCart = await Cart.findOneAndUpdate(
       { user_id },
-      { products_id: [...filterCart.products_id], count: newCount },
+      { products: [...filterArray, update], count: filterCart.count - 1 },
       { new: true, runValidators: true }
    );
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
    return res.status(StatusCodes.OK).json(userCart);
+   // //find the index product to be decremented in the user's cart
+   // const indexItemInCart = filterCart.products_id
+   //    .map((id) => id.toString())
+   //    .findIndex((id) => id === product_id);
+
+   // // check if the product does not exists
+   // if (indexItemInCart === -1) {
+   //    throw new NotFoundError("Item not in cart");
+   // }
+
+   // //
+   // await filterCart.products_id.splice(indexItemInCart, 1);
+
+   // const newCount = filterCart.count - 1;
+   // const userCart = await Cart.findOneAndUpdate(
+   //    { user_id },
+   //    { products_id: [...filterCart.products_id], count: newCount },
+   //    { new: true, runValidators: true }
+   // );
+   // if (!userCart) {
+   //    throw new NotFoundError("Cart does not exist");
+   // }
+   // return res.status(StatusCodes.OK).json(userCart);
 };
 const checkout = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "checkout" });
