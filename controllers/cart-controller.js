@@ -1,10 +1,6 @@
 const Cart = require("../models/Cart");
 const { StatusCodes } = require("http-status-codes");
-const {
-   BadRequestError,
-   NotFoundError,
-   UnauthenticatedError,
-} = require("../errors");
+const { BadRequestError, NotFoundError } = require("../errors");
 const mongoose = require("mongoose");
 
 const getAllProductInAUserCart = async (req, res) => {
@@ -135,7 +131,10 @@ const deleteProductFromAUserCart = async (req, res) => {
       { user_id },
       { products: [...filterArray], count: newCount },
       { new: true, runValidators: true }
-   );
+   ).populate({
+      path: "products.product_id",
+      select: "_id title price description image category",
+   });
    if (!deletedItem) {
       throw new NotFoundError("No cart found");
    }
@@ -188,7 +187,10 @@ const incrementCartItem = async (req, res) => {
       { user_id },
       { products: [...filterArray, update], count: filterCart.count + 1 },
       { new: true, runValidators: true }
-   );
+   ).populate({
+      path: "products.product_id",
+      select: "_id title price description image category",
+   });
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
@@ -235,7 +237,10 @@ const decrementCartItem = async (req, res) => {
          { user_id },
          { products: [...filterArray], count: filterCart.count - 1 },
          { new: true, runValidators: true }
-      );
+      ).populate({
+         path: "products.product_id",
+         select: "_id title price description image category",
+      });
 
       //  check if inserting into the database was successful
       if (!userCart) {
@@ -249,39 +254,19 @@ const decrementCartItem = async (req, res) => {
       product_id: mongoose.Types.ObjectId(product_id),
       quantity: updatedItem.quantity - 1,
    };
-   // TODO: FIX BUG AND POPULATE THE RESPONSES FOR ALL ROUTES
+
    const userCart = await Cart.findOneAndUpdate(
       { user_id },
       { products: [...filterArray, update], count: filterCart.count - 1 },
       { new: true, runValidators: true }
-   );
+   ).populate({
+      path: "products.product_id",
+      select: "_id title price description image category",
+   });
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
    return res.status(StatusCodes.OK).json(userCart);
-   // //find the index product to be decremented in the user's cart
-   // const indexItemInCart = filterCart.products_id
-   //    .map((id) => id.toString())
-   //    .findIndex((id) => id === product_id);
-
-   // // check if the product does not exists
-   // if (indexItemInCart === -1) {
-   //    throw new NotFoundError("Item not in cart");
-   // }
-
-   // //
-   // await filterCart.products_id.splice(indexItemInCart, 1);
-
-   // const newCount = filterCart.count - 1;
-   // const userCart = await Cart.findOneAndUpdate(
-   //    { user_id },
-   //    { products_id: [...filterCart.products_id], count: newCount },
-   //    { new: true, runValidators: true }
-   // );
-   // if (!userCart) {
-   //    throw new NotFoundError("Cart does not exist");
-   // }
-   // return res.status(StatusCodes.OK).json(userCart);
 };
 const checkout = async (req, res) => {
    res.status(StatusCodes.OK).json({ cart: "checkout" });
