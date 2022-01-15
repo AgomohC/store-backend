@@ -7,6 +7,7 @@ const getAllProductInAUserCart = async (req, res) => {
    const {
       user: { user_id },
    } = req;
+
    const cart = await Cart.findOne({ user_id }).populate({
       path: "products.product_id",
       select: "_id title price description image category",
