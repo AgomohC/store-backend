@@ -44,10 +44,11 @@ const getSearchItem = async (req, res) => {
    let {
       params: { searchValue },
    } = req;
-   if (searchValue.length < 1) {
+
+   if (!searchValue) {
       const product = await Products.find({});
       if (!product) {
-         throw new NotFoundError("Item not found");
+         throw new NotFoundError("No matches");
       }
       return res.status(StatusCodes.OK).json(product);
    }
@@ -56,7 +57,7 @@ const getSearchItem = async (req, res) => {
       title: { $regex: searchValue, $options: "ig" },
    });
    if (!product) {
-      throw new NotFoundError("Item not found");
+      throw new NotFoundError("No matches");
    }
    return res.status(StatusCodes.OK).json(product);
 };

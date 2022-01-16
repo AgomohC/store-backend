@@ -18,7 +18,7 @@ router.route("/").get(getAllProducts);
 router.route("/categories").get(getAllCategories);
 
 //  get all single product
-router.route("/:_id").get(getSingleProduct);
+router.route("/single/:_id").get(getSingleProduct);
 
 //  get products in categories
 router.route("/categories/:category").get(getProductInCategory);
