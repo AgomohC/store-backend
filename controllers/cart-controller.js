@@ -102,8 +102,8 @@ const addProductToAUserCart = async (req, res) => {
 };
 const deleteProductFromAUserCart = async (req, res) => {
    const {
+      params: { product_id },
       user: { user_id },
-      body: { product_id },
    } = req;
 
    // check if product_id was passed in

@@ -19,7 +19,7 @@ router.route("/").get(getAllProductInAUserCart);
 router.route("/").post(addProductToAUserCart);
 
 //  remove from cart
-router.route("/delete").delete(deleteProductFromAUserCart);
+router.route("/delete/:product_id").delete(deleteProductFromAUserCart);
 
 // clear cart
 router.route("/delete_all").delete(deleteAllProductsFromAUserCart);

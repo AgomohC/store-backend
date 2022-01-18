@@ -18,6 +18,7 @@ const {
 module.exports = {
    register,
    login,
+
    getAllProducts,
    getAllCategories,
    getSingleProduct,
