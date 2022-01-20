@@ -8,13 +8,15 @@ const getAllProductInAUserCart = async (req, res) => {
       user: { user_id },
    } = req;
 
-   const cart = await Cart.findOne({ user_id }).populate({
+   let cart = await Cart.findOne({ user_id }).populate({
       path: "products.product_id",
       select: "_id title price description image category",
    });
    if (!cart) {
-      throw new NotFoundError(`Cart not found`);
+      cart = await Cart.create({ user_id });
+      return res.status(StatusCodes.OK).json(cart);
    }
+
    return res.status(StatusCodes.OK).json(cart);
 };
 const addProductToAUserCart = async (req, res) => {
@@ -74,6 +76,7 @@ const addProductToAUserCart = async (req, res) => {
          path: "products.product_id",
          select: "_id title price description image category",
       });
+
       return res.status(StatusCodes.CREATED).json(update);
    }
 
@@ -98,6 +101,7 @@ const addProductToAUserCart = async (req, res) => {
       path: "products.product_id",
       select: "_id title price description image category",
    });
+
    return res.status(StatusCodes.CREATED).json(userCart2);
 };
 const deleteProductFromAUserCart = async (req, res) => {
@@ -139,6 +143,7 @@ const deleteProductFromAUserCart = async (req, res) => {
    if (!deletedItem) {
       throw new NotFoundError("No cart found");
    }
+
    return res.status(StatusCodes.OK).json(deletedItem);
 };
 const deleteAllProductsFromAUserCart = async (req, res) => {
@@ -195,6 +200,7 @@ const incrementCartItem = async (req, res) => {
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
+
    return res.status(StatusCodes.OK).json(userCart);
 };
 const decrementCartItem = async (req, res) => {
@@ -256,7 +262,7 @@ const decrementCartItem = async (req, res) => {
       quantity: updatedItem.quantity - 1,
    };
 
-   const userCart = await Cart.findOneAndUpdate(
+   let userCart = await Cart.findOneAndUpdate(
       { user_id },
       { products: [...filterArray, update], count: filterCart.count - 1 },
       { new: true, runValidators: true }
@@ -267,6 +273,7 @@ const decrementCartItem = async (req, res) => {
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
+
    return res.status(StatusCodes.OK).json(userCart);
 };
 const checkout = async (req, res) => {

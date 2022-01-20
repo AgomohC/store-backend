@@ -15,10 +15,15 @@ const CartSchema = mongoose.Schema({
             type: Number,
             default: 1,
          },
+         created_at: {
+            type: Date,
+            default: Date.now,
+         },
       },
    ],
    count: {
       type: Number,
+      default: 0,
    },
 });
 const Cart = mongoose.model("Cart", CartSchema);
