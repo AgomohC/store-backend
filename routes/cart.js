@@ -9,6 +9,7 @@ const {
    incrementCartItem,
    decrementCartItem,
    checkout,
+   checkOutCallBack,
 } = require("../controllers");
 // define routes
 
@@ -32,5 +33,8 @@ router.route("/decrement").patch(decrementCartItem);
 
 // checkout
 router.route("/checkout").post(checkout);
+
+// checkout callback
+router.route("/checkout").get(checkOutCallBack);
 
 module.exports = router;

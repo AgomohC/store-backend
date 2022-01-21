@@ -14,11 +14,11 @@ const {
    incrementCartItem,
    decrementCartItem,
    checkout,
+   checkOutCallBack,
 } = require("./cart-controller");
 module.exports = {
    register,
    login,
-
    getAllProducts,
    getAllCategories,
    getSingleProduct,
@@ -31,4 +31,5 @@ module.exports = {
    incrementCartItem,
    decrementCartItem,
    checkout,
+   checkOutCallBack,
 };
