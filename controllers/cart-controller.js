@@ -188,6 +188,7 @@ const incrementCartItem = async (req, res) => {
    const update = {
       product_id: mongoose.Types.ObjectId(product_id),
       quantity: updatedItem.quantity + 1,
+      created_at: updatedItem.created_at,
    };
    const userCart = await Cart.findOneAndUpdate(
       { user_id },
@@ -260,6 +261,7 @@ const decrementCartItem = async (req, res) => {
    let update = {
       product_id: mongoose.Types.ObjectId(product_id),
       quantity: updatedItem.quantity - 1,
+      created_at: updatedItem.created_at,
    };
 
    let userCart = await Cart.findOneAndUpdate(
