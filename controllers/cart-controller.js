@@ -3,8 +3,10 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const mongoose = require("mongoose");
 const axios = require("axios");
-const { initializePayment, verifyPayment } =
-   require("../config/paystack")(axios);
+const mySecretKey = `Bearer ${process.env.PAYSTACK_SECRET}`;
+
+// const { initializePayment, verifyPayment } =
+// require("../config/paystack")(axios);
 
 const getAllProductInAUserCart = async (req, res) => {
    const {
@@ -292,43 +294,62 @@ const checkout = async (req, res) => {
       full_name,
    };
    amount *= 100;
-   initializePayment(
-      { amount, email, full_name, phone_number, metadata },
-      (error, body) => {
-         if (error) {
-            //handle errors
-            console.log(error);
-            return;
-         }
-         response = JSON.parse(body);
-         res.status(StatusCodes.OK).redirect(response.data.authorization_url);
+   const {
+      data: { authorization_url },
+   } = await axios.post(
+      {
+         url: "https://api.paystack.co/transaction/initialize",
+         headers: {
+            authorization: mySecretKey,
+            "content-type": "application/json",
+            "cache-control": "no-cache",
+         },
+      },
+      {
+         amount,
+         email,
+         full_name,
+         phone_number,
+         metadata,
       }
    );
-   // res.status(StatusCodes.OK).json({ cart: "checkout" });
+   res.status(StatusCodes.OK).redirect(authorization_url);
 };
 
 const checkOutCallBack = async () => {
-   const ref = req.query.reference;
-   verifyPayment(ref, (error, body) => {
-      if (error) {
-         //handle errors appropriately
-         console.log(error);
-         return res.redirect("/error");
-      }
-      response = JSON.parse(body);
-      const data = _.at(response.data, [
-         "reference",
-         "amount",
-         "customer.email",
-         "metadata.full_name",
-      ]);
-      [reference, amount, email, full_name] = data;
-      newDonor = { reference, amount, email, full_name };
-
-      res.redirect("/receipt/" + donor._id);
-   }).catch((e) => {
-      res.redirect("/error");
+   const { reference } = req.query;
+   const { data } = await axios.get({
+      url:
+         "https://api.paystack.co/transaction/verify/" +
+         encodeURIComponent(reference),
+      headers: {
+         authorization: mySecretKey,
+         "content-type": "application/json",
+         "cache-control": "no-cache",
+      },
    });
+
+   // const ref = req.query.reference;
+   // verifyPayment(ref, (error, body) => {
+   //    if (error) {
+   //       //handle errors appropriately
+   //       console.log(error);
+   //       return res.redirect("/error");
+   //    }
+   //    response = JSON.parse(body);
+   //    const data = _.at(response.data, [
+   //       "reference",
+   //       "amount",
+   //       "customer.email",
+   //       "metadata.full_name",
+   //    ]);
+   //    [reference, amount, email, full_name] = data;
+   //    newDonor = { reference, amount, email, full_name };
+
+   //    res.redirect("/receipt/" + donor._id);
+   // }).catch((e) => {
+   //    res.redirect("/error");
+   // });
 };
 module.exports = {
    getAllProductInAUserCart,
