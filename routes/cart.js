@@ -35,6 +35,6 @@ router.route("/decrement").patch(decrementCartItem);
 router.route("/checkout").post(checkout);
 
 // checkout callback
-router.route("/checkout").get(checkOutCallBack);
+router.route("/paystack/checkout").get(checkOutCallBack);
 
 module.exports = router;

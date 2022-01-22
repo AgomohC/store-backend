@@ -3,6 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const mongoose = require("mongoose");
 const axios = require("axios");
+const res = require("express/lib/response");
 const mySecretKey = `Bearer ${process.env.PAYSTACK_SECRET}`;
 
 // const { initializePayment, verifyPayment } =
@@ -294,62 +295,46 @@ const checkout = async (req, res) => {
       full_name,
    };
    amount *= 100;
+   const url = "https://api.paystack.co/transaction/initialize";
+   const headers = {
+      authorization: mySecretKey,
+      "content-type": "application/json",
+      "cache-control": "no-cache",
+   };
    const {
-      data: { authorization_url },
-   } = await axios.post(
-      {
-         url: "https://api.paystack.co/transaction/initialize",
-         headers: {
-            authorization: mySecretKey,
-            "content-type": "application/json",
-            "cache-control": "no-cache",
-         },
+      data: {
+         data: { authorization_url },
       },
+   } = await axios.post(
+      url,
       {
          amount,
          email,
          full_name,
          phone_number,
          metadata,
-      }
+      },
+      { headers }
    );
+
    res.status(StatusCodes.OK).redirect(authorization_url);
 };
 
-const checkOutCallBack = async () => {
+const checkOutCallBack = async (req, res) => {
+   console.log(req.url);
    const { reference } = req.query;
-   const { data } = await axios.get({
-      url:
-         "https://api.paystack.co/transaction/verify/" +
-         encodeURIComponent(reference),
-      headers: {
-         authorization: mySecretKey,
-         "content-type": "application/json",
-         "cache-control": "no-cache",
-      },
-   });
-
-   // const ref = req.query.reference;
-   // verifyPayment(ref, (error, body) => {
-   //    if (error) {
-   //       //handle errors appropriately
-   //       console.log(error);
-   //       return res.redirect("/error");
-   //    }
-   //    response = JSON.parse(body);
-   //    const data = _.at(response.data, [
-   //       "reference",
-   //       "amount",
-   //       "customer.email",
-   //       "metadata.full_name",
-   //    ]);
-   //    [reference, amount, email, full_name] = data;
-   //    newDonor = { reference, amount, email, full_name };
-
-   //    res.redirect("/receipt/" + donor._id);
-   // }).catch((e) => {
-   //    res.redirect("/error");
-   // });
+   const url =
+      "https://api.paystack.co/transaction/verify/" +
+      encodeURIComponent(reference);
+   const headers = {
+      authorization: mySecretKey,
+      "content-type": "application/json",
+      "cache-control": "no-cache",
+      "Access-Control-Allow-Origin": "*",
+   };
+   const { data } = await axios.get(url, { headers });
+   console.log(data);
+   return res.status(StatusCodes.OK).json({ msg: "done" });
 };
 module.exports = {
    getAllProductInAUserCart,
