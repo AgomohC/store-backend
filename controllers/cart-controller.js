@@ -316,6 +316,15 @@ const checkout = async (req, res) => {
       },
       { headers }
    );
+   // res.header(
+   //    "Access-Control-Allow-Methods",
+   //    "GET, POST, OPTIONS, PUT, DELETE"
+   // );
+   // res.header("Access-Control-Allow-Origin", "*");
+   // res.header(
+   //    "Access-Control-Allow-Headers",
+   //    "Origin, X-Requested-With, Content-Type, Accept"
+   // );
 
    res.status(StatusCodes.OK).redirect(authorization_url);
 };
@@ -330,11 +339,10 @@ const checkOutCallBack = async (req, res) => {
       authorization: mySecretKey,
       "content-type": "application/json",
       "cache-control": "no-cache",
-      "Access-Control-Allow-Origin": "*",
    };
    const { data } = await axios.get(url, { headers });
-   console.log(data);
-   return res.status(StatusCodes.OK).json({ msg: "done" });
+
+   return res.status(StatusCodes.OK).json(data);
 };
 module.exports = {
    getAllProductInAUserCart,
