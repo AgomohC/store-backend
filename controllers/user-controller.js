@@ -28,7 +28,7 @@ const login = async (req, res) => {
    }
    const token = user.createJWT();
    const newUser = await User.findOne({ username }).select(
-      "_id firstName lastName username email"
+      "firstName lastName username email"
    );
 
    return res.status(StatusCodes.OK).json({ user: newUser, token });

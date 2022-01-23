@@ -1,6 +1,6 @@
 # Store API
 
-[store-api](#) is a REST API built to serve [Peculiar stores](#). This is built with [express.js](#) (a lightweight [node.js](#) framework) and [mongoose](#) (a [MongoDB](#) ODM).
+[store-api](https://peculiar-store-api.herokuapp.com/) is a REST API built to serve [Peculiar stores](https://peculiar-store.vercel.app/). This is built with [express.js](https://expressjs.com/en/5x/api.html) (a lightweight [node.js](https://nodejs.org/en/docs/) framework) and [mongoose](https://mongoosejs.com/docs/) (a [MongoDB](https://docs.mongodb.com/) ODM).
 
 ## Resources
 
@@ -14,49 +14,257 @@ There are three main resources:
 
 The authentication resource has 2 main endpoints
 
--  Register <#/api/auth/register>
--  Login <#/api/auth/login>
+-  Register <https://peculiar-store-api.herokuapp.com/api/auth/register>
+-  Login <https://peculiar-store-api.herokuapp.com/api/auth/login>
 
 #### Register
 
-This is done by making a post request to <#/api/auth/register>. The request body can hold firstName, lastName, email, username, password, address, city, postalCode and country fields.
+This is done by making a post request to <https://peculiar-store-api.herokuapp.com/api/auth/register>. The request body can hold firstName, lastName, email, username, password, address, city, postalCode and country fields.
 The firstName, lastName, email, username & password fields are required. If they are absent, a 400 error is returned.
 
 ```js
-fetch("#/api/auth/register", {
+fetch("https://peculiar-store-api.herokuapp.com/api/auth/register", {
    method: "POST",
    body: JSON.stringify({
-      issue_title: "sample issue",
-      issue_text: "sample issue text",
-      created_by: "sample issue creator",
-      assigned_to: "sample issue solver",
-      status_text: "sample issue status",
-      open: true,
+      firstName "sample first name",
+      lastName: "sample last name",
+      email: "sample email",
+      username: "sample username",
+      password: "sample password",
+
    }),
 })
    .then((res) => res.json())
    .then((json) => console.log(json));
 
-/* will return
-{
-    "newIssue": {
-        "issue_title": "sample issue",
-        "issue_text": "sample issue text",
-        "created_by": "sample issue creator",
-        "open": true,
-        "assigned_to": "sample issue solver",
-        "status_text": "sample issue status",
-        "project_name": "sample project",
-        "_id": "sample issue id",
-        "createdAt": "2021-10-30T20:42:36.420Z",
-        "updatedAt": "2021-10-30T20:42:36.420Z",
-        "__v": 0
-    }
-}
 
-If any of all of the issue_title, issue_text or created_by fields are missing from the request body, a 400 error is returned with the following json object
-{
-    "error": "required field(s) missing"
-}
-*/
 ```
+
+Will return
+
+```json
+{
+   "user": {
+      "firstName": "sample first name",
+      "lastName": "sample last name",
+      "email": "sample email",
+      "username": "sample username"
+   },
+   "token": "jwt"
+}
+```
+
+#### Login
+
+This is done by making a post request to <https://peculiar-store-api.herokuapp.com/api/auth/login>. The request body must hold the username & password. If either is missing, a 400 error is returned. If the user does not exist on the database or if the password is incorrect, a 401 error is returned.
+The firstName, lastName, email, username & password fields are required. If they are absent, a 400 error is returned.
+
+```js
+fetch("https://peculiar-store-api.herokuapp.com/api/auth/login", {
+   method: "POST",
+   body: JSON.stringify({
+      username: "sample username",
+      password: "sample password",
+   }),
+})
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+{
+   "user": {
+      "firstName": "sample first name",
+      "lastName": "sample last name",
+      "email": "sample email",
+      "username": "sample username",
+      "_id": "sample _id"
+   },
+   "token": "jwt"
+}
+```
+
+### Product
+
+The product resource has 5 endpoints
+
+-  Get all products <https://peculiar-store-api.herokuapp.com/api/products/>
+-  Get all categories <https://peculiar-store-api.herokuapp.com/api/products/categories>
+-  Get single product <https://peculiar-store-api.herokuapp.com/api/products/single/>:\_id
+-  Get product in category <https://peculiar-store-api.herokuapp.com/api/products/categories/>:category
+-  Get search item <https://peculiar-store-api.herokuapp.com/api/products/search/>:searchValue
+
+#### Get all products
+
+This endpoint returns all the products in the database. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/>.
+
+```js
+fetch("https://peculiar-store-api.herokuapp.com/api/products")
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "sample category",
+      "image": "sample image url"
+   },
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "sample category",
+      "image": "sample image url"
+   },
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "sample category",
+      "image": "sample image url"
+   },
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "sample category",
+      "image": "sample image url"
+   }
+]
+```
+
+#### Get all categories
+
+This endpoint returns all the product categories. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/categories/>.
+
+```js
+fetch("https://peculiar-store-api.herokuapp.com/api/products/categories")
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+{
+   "categories": [
+      "sample category",
+      "sample category",
+      "sample category",
+      "sample category",
+      "sample category"
+   ]
+}
+```
+
+#### Get single product
+
+This endpoint returns the product whose id was passed in as a parameter. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/single>:\_id with the product_id replacing the \_id parameter.
+
+```js
+fetch("https://peculiar-store-api.herokuapp.com/api/products/single/sampleid")
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "sample category",
+      "image": "sample image url"
+   }
+]
+```
+
+#### Get product in category
+
+A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/categories/>:category with the filter category replacing the category parameter.
+
+```js
+fetch(
+   "https://peculiar-store-api.herokuapp.com/api/products/categories/samplecategory"
+)
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "samplecategory",
+      "image": "sample image url"
+   },
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "samplecategory",
+      "image": "sample image url"
+   },
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "samplecategory",
+      "image": "sample image url"
+   }
+]
+```
+
+#### Get search item
+
+This endpoint returns all products whose title matches the term being searched for. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/search/>:searchValue with the letter/word to be searched for replacing searchValue,
+
+```js
+fetch(
+   "https://peculiar-store-api.herokuapp.com/api/products/search/samplesearchValue"
+)
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "title": "sample title",
+      "price": "sample price",
+      "description": "sample description",
+      "category": "sample category",
+      "image": "sample image url"
+   }
+]
+```
+
+### Cart
+
+The cart resource has 9 endpoints
+
+-  Get all products in a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/>
+-  Add product to a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/>
+-  Delete product from a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/delete/>:product_id
+-  Delete all products from a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/delete_all/>
+-  Increment cart item <https://peculiar-store-api.herokuapp.com/api/cart/increment/>
+-  Decrement cart item <https://peculiar-store-api.herokuapp.com/api/cart/decrement/>
+-  Checkout <https://peculiar-store-api.herokuapp.com/api/cart/checkout/>
+-  Checkout callback <https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/>
+-  Place order <https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/>
