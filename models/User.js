@@ -30,6 +30,14 @@ const UserSchema = mongoose.Schema({
       type: String,
       required: [true, "please enter password"],
    },
+   address: String,
+   city: String,
+   postalCode: String,
+   country: String,
+   hasOpenOrder: {
+      type: Boolean,
+      default: false,
+   },
 });
 
 //hash password before saving to the dbs

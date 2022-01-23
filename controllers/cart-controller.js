@@ -1,4 +1,5 @@
 const Cart = require("../models/Cart");
+const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const mongoose = require("mongoose");
@@ -316,21 +317,20 @@ const checkout = async (req, res) => {
       },
       { headers }
    );
-   // res.header(
-   //    "Access-Control-Allow-Methods",
-   //    "GET, POST, OPTIONS, PUT, DELETE"
-   // );
-   // res.header("Access-Control-Allow-Origin", "*");
-   // res.header(
-   //    "Access-Control-Allow-Headers",
-   //    "Origin, X-Requested-With, Content-Type, Accept"
-   // );
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, DELETE"
+   );
+   res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+   );
 
-   res.status(StatusCodes.OK).redirect(authorization_url);
+   res.status(StatusCodes.OK).json({ url: authorization_url });
 };
 
 const checkOutCallBack = async (req, res) => {
-   console.log(req.url);
    const { reference } = req.query;
    const url =
       "https://api.paystack.co/transaction/verify/" +
@@ -341,9 +341,26 @@ const checkOutCallBack = async (req, res) => {
       "cache-control": "no-cache",
    };
    const { data } = await axios.get(url, { headers });
-
    return res.status(StatusCodes.OK).json(data);
 };
+
+const placeOrder = async (req, res) => {
+   const {
+      user: { user_id },
+      body: { address, city, postalCode, country },
+   } = req;
+
+   const openOrder = User.findOneAndUpdate(
+      { _id: user_id },
+      { address, city, postalCode, country, hasOpenOrder: true },
+      { new: true, runValidators: true }
+   );
+   if (!openOrder) {
+      throw new NotFoundError("User not found");
+   }
+   return res.status(StatusCodes.CREATED).json(openOrder);
+};
+
 module.exports = {
    getAllProductInAUserCart,
    addProductToAUserCart,
