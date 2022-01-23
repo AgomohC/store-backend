@@ -15,6 +15,7 @@ const {
    decrementCartItem,
    checkout,
    checkOutCallBack,
+   placeOrder,
 } = require("./cart-controller");
 module.exports = {
    register,
@@ -32,4 +33,5 @@ module.exports = {
    decrementCartItem,
    checkout,
    checkOutCallBack,
+   placeOrder,
 };

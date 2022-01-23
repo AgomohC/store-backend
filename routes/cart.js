@@ -10,7 +10,9 @@ const {
    decrementCartItem,
    checkout,
    checkOutCallBack,
+   placeOrder,
 } = require("../controllers");
+
 // define routes
 
 //  get all products in a user's cart
@@ -36,5 +38,8 @@ router.route("/checkout").post(checkout);
 
 // checkout callback
 router.route("/paystack/checkout").get(checkOutCallBack);
+
+// add shipping details
+router.route("/checkout/shipping").post(placeOrder);
 
 module.exports = router;

@@ -350,7 +350,7 @@ const placeOrder = async (req, res) => {
       body: { address, city, postalCode, country },
    } = req;
 
-   const openOrder = User.findOneAndUpdate(
+   const openOrder = await User.findOneAndUpdate(
       { _id: user_id },
       { address, city, postalCode, country, hasOpenOrder: true },
       { new: true, runValidators: true }
@@ -370,4 +370,5 @@ module.exports = {
    decrementCartItem,
    checkout,
    checkOutCallBack,
+   placeOrder,
 };
