@@ -4,7 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const mongoose = require("mongoose");
 const axios = require("axios");
-const res = require("express/lib/response");
+
 const mySecretKey = `Bearer ${process.env.PAYSTACK_SECRET}`;
 
 const getAllProductInAUserCart = async (req, res) => {

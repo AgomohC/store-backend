@@ -271,7 +271,7 @@ The cart resource has 9 endpoints
 
 #### Get all products in a user's cart
 
-This endpoint returns all the products in the cart of a specific user. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>.
+This endpoint returns all the products in the cart of a specific user. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned. if there are no products in the user's cart, the products array would be empty and the count would be 0.
 
 ```js
 axios
@@ -314,11 +314,90 @@ Will return
 
 #### Add product to a user's cart
 
-This endpoint is used to add a single product to the user's cart. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>.
+This endpoint is used to add a single product to the user's cart. A post request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
-   .post("https://peculiar-store-api.herokuapp.com/api/cart/", {
+   .post(
+      "https://peculiar-store-api.herokuapp.com/api/cart/",
+      { product_id: sample_id },
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "_id": "sample_id",
+      "user_id": "sample user_id",
+      "count": "total number of items in the cart + 1",
+      "products": [
+         {
+            "product_id": {
+               "_id": "sample product_id",
+               "title": "sample product _id",
+               "price": "sample product price",
+               "description": "Sample product description",
+               "category": "sample product category",
+               "image": "sample product image"
+            },
+            "quantity": "number of sample products in the cart +" 1,
+            "_id": "sample _id",
+            "created_at": "time sample product was added to cart"
+         }
+      ],
+      "__v": 0
+   }
+]
+```
+
+#### Delete product to a user's cart
+
+This endpoint is used to delete a single product from the user's cart. A delete request is made to <https://peculiar-store-api.herokuapp.com/api/cart/delete/>:product_id, with the \_id of the product to be deleted from the user cart replacing the product_id parameter. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+
+```js
+axios
+   .delete(
+      "https://peculiar-store-api.herokuapp.com/api/cart/delete/sample_product_id",
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "_id": "sample_id",
+      "user_id": "sample user_id",
+      "count": 0,
+      "products": [],
+      "__v": 0
+   }
+]
+```
+
+#### Delete all the products in a user's cart
+
+This endpoint is used to delete all the products in the user's cart. A delete request is made to <https://peculiar-store-api.herokuapp.com/api/cart/delete_all/>. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+
+```js
+axios
+   .delete("https://peculiar-store-api.herokuapp.com/api/cart/delete_all/", {
       headers: {
          authorization: "Bearer sample-jwt-token",
       },
@@ -334,7 +413,42 @@ Will return
    {
       "_id": "sample_id",
       "user_id": "sample user_id",
-      "count": "total number of items in the cart",
+      "count": 0,
+      "products": [],
+      "__v": 0
+   }
+]
+```
+
+#### Increment cart item
+
+This endpoint is used to increase the quantity of a single product in the cart. A patch request is made to <https://peculiar-store-api.herokuapp.com/api/cart/increment/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+
+```js
+axios
+   .patch(
+      "https://peculiar-store-api.herokuapp.com/api/cart/increment/",
+      {
+         product_id: "sample_product_id",
+      },
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "_id": "sample_id",
+      "user_id": "sample user_id",
+      "count": "total number of items in the cart + 1",
       "products": [
          {
             "product_id": {
@@ -345,7 +459,7 @@ Will return
                "category": "sample product category",
                "image": "sample product image"
             },
-            "quantity": "number of sample products in the cart",
+            "quantity": "number of sample products in the cart +" 1,
             "_id": "sample _id",
             "created_at": "time sample product was added to cart"
          }
@@ -354,3 +468,139 @@ Will return
    }
 ]
 ```
+
+#### Decrement cart item
+
+This endpoint is used to decrease the quantity of a single product in the cart. A patch request is made to <https://peculiar-store-api.herokuapp.com/api/cart/decrement/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.If the quantity of the item being decremented is 0, the item is removed from the cart.
+
+```js
+axios
+   .patch(
+      "https://peculiar-store-api.herokuapp.com/api/cart/decrement/",
+      {
+         product_id: "sample_product_id",
+      },
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "_id": "sample_id",
+      "user_id": "sample user_id",
+      "count": "total number of items in the cart - 1",
+      "products": [
+         {
+            "product_id": {
+               "_id": "sample product_id",
+               "title": "sample product _id",
+               "price": "sample product price",
+               "description": "Sample product description",
+               "category": "sample product category",
+               "image": "sample product image"
+            },
+            "quantity": "number of sample products in the cart -" 1,
+            "_id": "sample _id",
+            "created_at": "time sample product was added to cart"
+         }
+      ],
+      "__v": 0
+   }
+]
+```
+
+#### Checkout
+
+This endpoint is used to initialize payment on Paystack. A post request is made to <https://peculiar-store-api.herokuapp.com/api/cart/checkout/>. The request body contains the total price of the items in a cart, the email, phone number and full name of the customer. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+
+```js
+axios
+   .post(
+      "https://peculiar-store-api.herokuapp.com/api/cart/checkout/",
+      {
+         amount: "sample_amount",
+         email: "sample_email",
+         fullName: "sample_full_name",
+         phoneNumber: "sample_phone_number",
+      },
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[{ "url": "sample_authorization_url" }]
+```
+
+#### Checkout callback
+
+This endpoint is used to verify payment on Paystack. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/>. The request query contains the paystack reference. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+
+```js
+axios
+   .get(
+      "https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/",
+
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[{ "url": "sample_authorization_url" }]
+```
+
+#### Place order
+
+This endpoint is used to place the user's order. A post request is made to <https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/>. The request body contains the shipping details of the user. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+
+```js
+axios
+   .post(
+      "https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/",
+      {
+       address:"sample_address",
+       city:"sample_city",
+       postalCode:"sample_postal_code", country"sample_country" },
+      {
+         headers: {
+            authorization: "Bearer sample-jwt-token",
+         },
+      }
+   )
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+
+```
+
+## Feedback!!
+
+I'd love your feedback on the API. You can reach me via [email](mailto:chinaemerema@gmail.com) or give me a shout out on [twitter](https://twitter.com/femto_ace?t=nk6ylNm1Zp2l0yiJkCKFeA&s=09)
