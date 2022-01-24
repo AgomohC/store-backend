@@ -7,9 +7,6 @@ const axios = require("axios");
 const res = require("express/lib/response");
 const mySecretKey = `Bearer ${process.env.PAYSTACK_SECRET}`;
 
-// const { initializePayment, verifyPayment } =
-// require("../config/paystack")(axios);
-
 const getAllProductInAUserCart = async (req, res) => {
    const {
       user: { user_id },

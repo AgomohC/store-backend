@@ -268,3 +268,89 @@ The cart resource has 9 endpoints
 -  Checkout <https://peculiar-store-api.herokuapp.com/api/cart/checkout/>
 -  Checkout callback <https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/>
 -  Place order <https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/>
+
+#### Get all products in a user's cart
+
+This endpoint returns all the products in the cart of a specific user. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>.
+
+```js
+axios
+   .post("https://peculiar-store-api.herokuapp.com/api/cart/", {
+      headers: {
+         authorization: "Bearer sample-jwt-token",
+      },
+   })
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "_id": "sample_id",
+      "user_id": "sample user_id",
+      "count": "total number of items in the cart",
+      "products": [
+         {
+            "product_id": {
+               "_id": "sample product_id",
+               "title": "sample product _id",
+               "price": "sample product price",
+               "description": "Sample product description",
+               "category": "sample product category",
+               "image": "sample product image"
+            },
+            "quantity": "number of sample products in the cart",
+            "_id": "sample _id",
+            "created_at": "time sample product was added to cart"
+         }
+      ],
+      "__v": 0
+   }
+]
+```
+
+#### Add product to a user's cart
+
+This endpoint is used to add a single product to the user's cart. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>.
+
+```js
+axios
+   .post("https://peculiar-store-api.herokuapp.com/api/cart/", {
+      headers: {
+         authorization: "Bearer sample-jwt-token",
+      },
+   })
+   .then((res) => res.json())
+   .then((json) => console.log(json));
+```
+
+Will return
+
+```json
+[
+   {
+      "_id": "sample_id",
+      "user_id": "sample user_id",
+      "count": "total number of items in the cart",
+      "products": [
+         {
+            "product_id": {
+               "_id": "sample product_id",
+               "title": "sample product _id",
+               "price": "sample product price",
+               "description": "Sample product description",
+               "category": "sample product category",
+               "image": "sample product image"
+            },
+            "quantity": "number of sample products in the cart",
+            "_id": "sample _id",
+            "created_at": "time sample product was added to cart"
+         }
+      ],
+      "__v": 0
+   }
+]
+```
