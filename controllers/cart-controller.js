@@ -12,10 +12,12 @@ const getAllProductInAUserCart = async (req, res) => {
       user: { user_id },
    } = req;
 
-   let cart = await Cart.findOne({ user_id }).populate({
-      path: "products.product_id",
-      select: "_id title price description image category",
-   });
+   let cart = await Cart.findOne({ user_id })
+      .populate({
+         path: "products.product_id",
+         select: "_id title price description image category",
+      })
+      .select("_id count products");
    if (!cart) {
       cart = await Cart.create({ user_id });
       return res.status(StatusCodes.OK).json(cart);
@@ -49,10 +51,12 @@ const addProductToAUserCart = async (req, res) => {
       });
 
       // find the newly created cart, populate the relevant fields
-      const returnedCart = await Cart.findOne({ _id: newCart._id }).populate({
-         path: "products.product_id",
-         select: "_id title price description image category",
-      });
+      const returnedCart = await Cart.findOne({ _id: newCart._id })
+         .populate({
+            path: "products.product_id",
+            select: "_id title price description image category",
+         })
+         .select("_id count products");
 
       // return
       return res.status(StatusCodes.CREATED).json(returnedCart);
@@ -76,10 +80,12 @@ const addProductToAUserCart = async (req, res) => {
             new: true,
             runValidators: true,
          }
-      ).populate({
-         path: "products.product_id",
-         select: "_id title price description image category",
-      });
+      )
+         .populate({
+            path: "products.product_id",
+            select: "_id title price description image category",
+         })
+         .select("_id count products");
 
       return res.status(StatusCodes.CREATED).json(update);
    }
@@ -101,10 +107,12 @@ const addProductToAUserCart = async (req, res) => {
          new: true,
          runValidators: true,
       }
-   ).populate({
-      path: "products.product_id",
-      select: "_id title price description image category",
-   });
+   )
+      .populate({
+         path: "products.product_id",
+         select: "_id title price description image category",
+      })
+      .select("_id count products");
 
    return res.status(StatusCodes.CREATED).json(userCart2);
 };
@@ -140,10 +148,12 @@ const deleteProductFromAUserCart = async (req, res) => {
       { user_id },
       { products: [...filterArray], count: newCount },
       { new: true, runValidators: true }
-   ).populate({
-      path: "products.product_id",
-      select: "_id title price description image category",
-   });
+   )
+      .populate({
+         path: "products.product_id",
+         select: "_id title price description image category",
+      })
+      .select("_id count products");
    if (!deletedItem) {
       throw new NotFoundError("No cart found");
    }
@@ -158,7 +168,7 @@ const deleteAllProductsFromAUserCart = async (req, res) => {
       { user_id },
       { products: [], count: 0 },
       { new: true, runValidators: true }
-   );
+   ).select("_id count products");
    if (!emptyCart) {
       throw new NotFoundError(`Cart does not exist`);
    }
@@ -198,10 +208,12 @@ const incrementCartItem = async (req, res) => {
       { user_id },
       { products: [...filterArray, update], count: filterCart.count + 1 },
       { new: true, runValidators: true }
-   ).populate({
-      path: "products.product_id",
-      select: "_id title price description image category",
-   });
+   )
+      .populate({
+         path: "products.product_id",
+         select: "_id title price description image category",
+      })
+      .select("_id count products");
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
@@ -232,7 +244,7 @@ const decrementCartItem = async (req, res) => {
       (product) => product.product_id.toString() === product_id
    );
 
-   // throw error is the item is not in the cart
+   // throw error if the item is not in the cart
    if (!updatedItem) {
       throw new NotFoundError("Item not in cart");
    }
@@ -249,10 +261,12 @@ const decrementCartItem = async (req, res) => {
          { user_id },
          { products: [...filterArray], count: filterCart.count - 1 },
          { new: true, runValidators: true }
-      ).populate({
-         path: "products.product_id",
-         select: "_id title price description image category",
-      });
+      )
+         .populate({
+            path: "products.product_id",
+            select: "_id title price description image category",
+         })
+         .select("_id count products");
 
       //  check if inserting into the database was successful
       if (!userCart) {
@@ -272,10 +286,12 @@ const decrementCartItem = async (req, res) => {
       { user_id },
       { products: [...filterArray, update], count: filterCart.count - 1 },
       { new: true, runValidators: true }
-   ).populate({
-      path: "products.product_id",
-      select: "_id title price description image category",
-   });
+   )
+      .populate({
+         path: "products.product_id",
+         select: "_id title price description image category",
+      })
+      .select("_id count products");
    if (!userCart) {
       throw new NotFoundError("Cart does not exist");
    }
@@ -289,9 +305,11 @@ const checkout = async (req, res) => {
       fullName: full_name,
       phoneNumber: phone_number,
    } = req.body;
+
    const metadata = {
       full_name,
    };
+
    amount *= 100;
    const url = "https://api.paystack.co/transaction/initialize";
    const headers = {
@@ -313,15 +331,6 @@ const checkout = async (req, res) => {
          metadata,
       },
       { headers }
-   );
-   res.header("Access-Control-Allow-Origin", "*");
-   res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, DELETE"
-   );
-   res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
    );
 
    res.status(StatusCodes.OK).json({ url: authorization_url });
@@ -351,7 +360,7 @@ const placeOrder = async (req, res) => {
       { _id: user_id },
       { address, city, postalCode, country, hasOpenOrder: true },
       { new: true, runValidators: true }
-   );
+   ).select("firstName lastName email username");
    if (!openOrder) {
       throw new NotFoundError("User not found");
    }
