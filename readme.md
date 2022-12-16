@@ -1,6 +1,6 @@
 # Store API
 
-[store-api](https://peculiar-store-api.herokuapp.com/) is a REST API built to serve [Peculiar stores](https://peculiar-store.vercel.app/). This is built with [express.js](https://expressjs.com/en/5x/api.html) (a lightweight [node.js](https://nodejs.org/en/docs/) framework) and [mongoose](https://mongoosejs.com/docs/) (a [MongoDB](https://docs.mongodb.com/) ODM).
+[store-api](https://femto-store-backend.up.railway.app/) is a REST API built to serve [Peculiar stores](https://peculiar-store.vercel.app/). This is built with [express.js](https://expressjs.com/en/5x/api.html) (a lightweight [node.js](https://nodejs.org/en/docs/) framework) and [mongoose](https://mongoosejs.com/docs/) (a [MongoDB](https://docs.mongodb.com/) ODM).
 
 ## Resources
 
@@ -14,16 +14,16 @@ There are three main resources:
 
 The authentication resource has 2 main endpoints
 
--  Register <https://peculiar-store-api.herokuapp.com/api/auth/register>
--  Login <https://peculiar-store-api.herokuapp.com/api/auth/login>
+-  Register <https://femto-store-backend.up.railway.app/api/auth/register>
+-  Login <https://femto-store-backend.up.railway.app/api/auth/login>
 
 #### Register
 
-This is done by making a post request to <https://peculiar-store-api.herokuapp.com/api/auth/register>. The request body can hold firstName, lastName, email, username, password, address, city, postalCode and country fields.
+This is done by making a post request to <https://femto-store-backend.up.railway.app/api/auth/register>. The request body can hold firstName, lastName, email, username, password, address, city, postalCode and country fields.
 The firstName, lastName, email, username & password fields are required. If they are absent, a 400 error is returned.
 
 ```js
-fetch("https://peculiar-store-api.herokuapp.com/api/auth/register", {
+fetch("https://femto-store-backend.up.railway.app/api/auth/register", {
    method: "POST",
    body: JSON.stringify({
       firstName "sample first name",
@@ -56,11 +56,11 @@ Will return
 
 #### Login
 
-This is done by making a post request to <https://peculiar-store-api.herokuapp.com/api/auth/login>. The request body must hold the username & password. If either is missing, a 400 error is returned. If the user does not exist on the database or if the password is incorrect, a 401 error is returned.
+This is done by making a post request to <https://femto-store-backend.up.railway.app/api/auth/login>. The request body must hold the username & password. If either is missing, a 400 error is returned. If the user does not exist on the database or if the password is incorrect, a 401 error is returned.
 The firstName, lastName, email, username & password fields are required. If they are absent, a 400 error is returned.
 
 ```js
-fetch("https://peculiar-store-api.herokuapp.com/api/auth/login", {
+fetch("https://femto-store-backend.up.railway.app/api/auth/login", {
    method: "POST",
    body: JSON.stringify({
       username: "sample username",
@@ -90,11 +90,11 @@ Will return
 
 The product resource has 5 endpoints
 
--  Get all products <https://peculiar-store-api.herokuapp.com/api/products/>
--  Get all categories <https://peculiar-store-api.herokuapp.com/api/products/categories>
--  Get single product <https://peculiar-store-api.herokuapp.com/api/products/single/>:\_id
--  Get product in category <https://peculiar-store-api.herokuapp.com/api/products/categories/>:category
--  Get search item <https://peculiar-store-api.herokuapp.com/api/products/search/>:searchValue
+-  Get all products <https://femto-store-backend.up.railway.app/api/products/>
+-  Get all categories <https://femto-store-backend.up.railway.app/api/products/categories>
+-  Get single product <https://femto-store-backend.up.railway.app/api/products/single/>:\_id
+-  Get product in category <https://femto-store-backend.up.railway.app/api/products/categories/>:category
+-  Get search item <https://femto-store-backend.up.railway.app/api/products/search/>:searchValue
 
 #### Get all products
 
@@ -146,7 +146,7 @@ Will return
 This endpoint returns all the product categories. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/categories/>.
 
 ```js
-fetch("https://peculiar-store-api.herokuapp.com/api/products/categories")
+fetch("https://femto-store-backend.up.railway.app/api/products/categories")
    .then((res) => res.json())
    .then((json) => console.log(json));
 ```
@@ -170,7 +170,7 @@ Will return
 This endpoint returns the product whose id was passed in as a parameter. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/single>:\_id with the product_id replacing the \_id parameter.
 
 ```js
-fetch("https://peculiar-store-api.herokuapp.com/api/products/single/sampleid")
+fetch("https://femto-store-backend.up.railway.app/api/products/single/sampleid")
    .then((res) => res.json())
    .then((json) => console.log(json));
 ```
@@ -191,11 +191,11 @@ Will return
 
 #### Get product in category
 
-A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/categories/>:category with the filter category replacing the category parameter.
+A get request is made to <https://femto-store-backend.up.railway.app/api/products/categories/>:category with the filter category replacing the category parameter.
 
 ```js
 fetch(
-   "https://peculiar-store-api.herokuapp.com/api/products/categories/samplecategory"
+   "https://femto-store-backend.up.railway.app/api/products/categories/samplecategory"
 )
    .then((res) => res.json())
    .then((json) => console.log(json));
@@ -231,11 +231,11 @@ Will return
 
 #### Get search item
 
-This endpoint returns all products whose title matches the term being searched for. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/search/>:searchValue with the letter/word to be searched for replacing searchValue,
+This endpoint returns all products whose title matches the term being searched for. A get request is made to <https://femto-store-backend.up.railway.app/api/products/search/>:searchValue with the letter/word to be searched for replacing searchValue,
 
 ```js
 fetch(
-   "https://peculiar-store-api.herokuapp.com/api/products/search/samplesearchValue"
+   "https://femto-store-backend.up.railway.app/api/products/search/samplesearchValue"
 )
    .then((res) => res.json())
    .then((json) => console.log(json));
@@ -259,23 +259,23 @@ Will return
 
 The cart resource has 9 endpoints
 
--  Get all products in a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/>
--  Add product to a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/>
--  Delete product from a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/delete/>:product_id
--  Delete all products from a user's cart <https://peculiar-store-api.herokuapp.com/api/cart/delete_all/>
--  Increment cart item <https://peculiar-store-api.herokuapp.com/api/cart/increment/>
--  Decrement cart item <https://peculiar-store-api.herokuapp.com/api/cart/decrement/>
--  Checkout <https://peculiar-store-api.herokuapp.com/api/cart/checkout/>
--  Checkout callback <https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/>
--  Place order <https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/>
+-  Get all products in a user's cart <https://femto-store-backend.up.railway.app/api/cart/>
+-  Add product to a user's cart <https://femto-store-backend.up.railway.app/api/cart/>
+-  Delete product from a user's cart <https://femto-store-backend.up.railway.app/api/cart/delete/>:product_id
+-  Delete all products from a user's cart <https://femto-store-backend.up.railway.app/api/cart/delete_all/>
+-  Increment cart item <https://femto-store-backend.up.railway.app/api/cart/increment/>
+-  Decrement cart item <https://femto-store-backend.up.railway.app/api/cart/decrement/>
+-  Checkout <https://femto-store-backend.up.railway.app/api/cart/checkout/>
+-  Checkout callback <https://femto-store-backend.up.railway.app/api/cart/paystack/checkout/>
+-  Place order <https://femto-store-backend.up.railway.app/api/cart/checkout/shipping/>
 
 #### Get all products in a user's cart
 
-This endpoint returns all the products in the cart of a specific user. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned. if there are no products in the user's cart, the products array would be empty and the count would be 0.
+This endpoint returns all the products in the cart of a specific user. A get request is made to <https://femto-store-backend.up.railway.app/api/cart/>. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned. if there are no products in the user's cart, the products array would be empty and the count would be 0.
 
 ```js
 axios
-   .post("https://peculiar-store-api.herokuapp.com/api/cart/", {
+   .post("https://femto-store-backend.up.railway.app/api/cart/", {
       headers: {
          authorization: "Bearer sample-jwt-token",
       },
@@ -314,12 +314,12 @@ Will return
 
 #### Add product to a user's cart
 
-This endpoint is used to add a single product to the user's cart. A post request is made to <https://peculiar-store-api.herokuapp.com/api/cart/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to add a single product to the user's cart. A post request is made to <https://femto-store-backend.up.railway.app/api/cart/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
    .post(
-      "https://peculiar-store-api.herokuapp.com/api/cart/",
+      "https://femto-store-backend.up.railway.app/api/cart/",
       { product_id: sample_id },
       {
          headers: {
@@ -361,12 +361,12 @@ Will return
 
 #### Delete product to a user's cart
 
-This endpoint is used to delete a single product from the user's cart. A delete request is made to <https://peculiar-store-api.herokuapp.com/api/cart/delete/>:product_id, with the \_id of the product to be deleted from the user cart replacing the product_id parameter. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to delete a single product from the user's cart. A delete request is made to <https://femto-store-backend.up.railway.app/api/cart/delete/>:product_id, with the \_id of the product to be deleted from the user cart replacing the product_id parameter. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
    .delete(
-      "https://peculiar-store-api.herokuapp.com/api/cart/delete/sample_product_id",
+      "https://femto-store-backend.up.railway.app/api/cart/delete/sample_product_id",
       {
          headers: {
             authorization: "Bearer sample-jwt-token",
@@ -393,11 +393,11 @@ Will return
 
 #### Delete all the products in a user's cart
 
-This endpoint is used to delete all the products in the user's cart. A delete request is made to <https://peculiar-store-api.herokuapp.com/api/cart/delete_all/>. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to delete all the products in the user's cart. A delete request is made to <https://femto-store-backend.up.railway.app/api/cart/delete_all/>. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
-   .delete("https://peculiar-store-api.herokuapp.com/api/cart/delete_all/", {
+   .delete("https://femto-store-backend.up.railway.app/api/cart/delete_all/", {
       headers: {
          authorization: "Bearer sample-jwt-token",
       },
@@ -422,12 +422,12 @@ Will return
 
 #### Increment cart item
 
-This endpoint is used to increase the quantity of a single product in the cart. A patch request is made to <https://peculiar-store-api.herokuapp.com/api/cart/increment/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to increase the quantity of a single product in the cart. A patch request is made to <https://femto-store-backend.up.railway.app/api/cart/increment/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
    .patch(
-      "https://peculiar-store-api.herokuapp.com/api/cart/increment/",
+      "https://femto-store-backend.up.railway.app/api/cart/increment/",
       {
          product_id: "sample_product_id",
       },
@@ -471,12 +471,12 @@ Will return
 
 #### Decrement cart item
 
-This endpoint is used to decrease the quantity of a single product in the cart. A patch request is made to <https://peculiar-store-api.herokuapp.com/api/cart/decrement/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.If the quantity of the item being decremented is 0, the item is removed from the cart.
+This endpoint is used to decrease the quantity of a single product in the cart. A patch request is made to <https://femto-store-backend.up.railway.app/api/cart/decrement/>. The \_id of the product to be added to the user cart is held in the request body under the product_id field. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.If the quantity of the item being decremented is 0, the item is removed from the cart.
 
 ```js
 axios
    .patch(
-      "https://peculiar-store-api.herokuapp.com/api/cart/decrement/",
+      "https://femto-store-backend.up.railway.app/api/cart/decrement/",
       {
          product_id: "sample_product_id",
       },
@@ -525,7 +525,7 @@ This endpoint is used to initialize payment on Paystack. A post request is made 
 ```js
 axios
    .post(
-      "https://peculiar-store-api.herokuapp.com/api/cart/checkout/",
+      "https://femto-store-backend.up.railway.app/api/cart/checkout/",
       {
          amount: "sample_amount",
          email: "sample_email",
@@ -555,7 +555,7 @@ This endpoint is used to verify payment on Paystack. A get request is made to <h
 ```js
 axios
    .get(
-      "https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/",
+      "https://femto-store-backend.up.railway.app/api/cart/paystack/checkout/",
 
       {
          headers: {
@@ -580,7 +580,7 @@ This endpoint is used to place the user's order. A post request is made to <http
 ```js
 axios
    .post(
-      "https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/",
+      "https://femto-store-backend.up.railway.app/api/cart/checkout/shipping/",
       {
        address:"sample_address",
        city:"sample_city",
