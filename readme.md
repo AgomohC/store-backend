@@ -98,10 +98,10 @@ The product resource has 5 endpoints
 
 #### Get all products
 
-This endpoint returns all the products in the database. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/>.
+This endpoint returns all the products in the database. A get request is made to <https://femto-store-backend.up.railway.app/api/products/>.
 
 ```js
-fetch("https://peculiar-store-api.herokuapp.com/api/products")
+fetch("https://femto-store-backend.up.railway.app/api/products")
    .then((res) => res.json())
    .then((json) => console.log(json));
 ```
@@ -143,7 +143,7 @@ Will return
 
 #### Get all categories
 
-This endpoint returns all the product categories. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/categories/>.
+This endpoint returns all the product categories. A get request is made to <https://femto-store-backend.up.railway.app/api/products/categories/>.
 
 ```js
 fetch("https://femto-store-backend.up.railway.app/api/products/categories")
@@ -167,7 +167,7 @@ Will return
 
 #### Get single product
 
-This endpoint returns the product whose id was passed in as a parameter. A get request is made to <https://peculiar-store-api.herokuapp.com/api/products/single>:\_id with the product_id replacing the \_id parameter.
+This endpoint returns the product whose id was passed in as a parameter. A get request is made to <https://femto-store-backend.up.railway.app/api/products/single>:\_id with the product_id replacing the \_id parameter.
 
 ```js
 fetch("https://femto-store-backend.up.railway.app/api/products/single/sampleid")
@@ -520,7 +520,7 @@ Will return
 
 #### Checkout
 
-This endpoint is used to initialize payment on Paystack. A post request is made to <https://peculiar-store-api.herokuapp.com/api/cart/checkout/>. The request body contains the total price of the items in a cart, the email, phone number and full name of the customer. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to initialize payment on Paystack. A post request is made to <https://femto-store-backend.up.railway.app/api/cart/checkout/>. The request body contains the total price of the items in a cart, the email, phone number and full name of the customer. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
@@ -550,7 +550,7 @@ Will return
 
 #### Checkout callback
 
-This endpoint is used to verify payment on Paystack. A get request is made to <https://peculiar-store-api.herokuapp.com/api/cart/paystack/checkout/>. The request query contains the paystack reference. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to verify payment on Paystack. A get request is made to <=https://femto-store-backend.up.railway.app/api/cart/paystack/checkout/>. The request query contains the paystack reference. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
@@ -575,7 +575,7 @@ Will return
 
 #### Place order
 
-This endpoint is used to place the user's order. A post request is made to <https://peculiar-store-api.herokuapp.com/api/cart/checkout/shipping/>. The request body contains the shipping details of the user. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
+This endpoint is used to place the user's order. A post request is made to <https://femto-store-backend.up.railway.app/api/cart/checkout/shipping/>. The request body contains the shipping details of the user. As this is a protected route, the JWT token must be included in the request header as shown below. If absent, a 400 error is returned.
 
 ```js
 axios
