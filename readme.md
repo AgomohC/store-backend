@@ -1,6 +1,6 @@
 # Store API
 
-[store-api](https://bitter-hill-3387.fly.dev/api) is a REST API built to serve
+[store-api](https://bitter-hill-3387.fly.dev/api/products) is a REST API built to serve
 [Peculiar stores](https://peculiar-store.vercel.app/). This is built with
 [express.js](https://expressjs.com/en/5x/api.html) (a lightweight
 [node.js](https://nodejs.org/en/docs/) framework) and [mongoose](https://mongoosejs.com/docs/) (a
